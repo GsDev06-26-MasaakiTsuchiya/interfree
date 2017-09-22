@@ -4,13 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-// use Interview;
-// use UserList;
-// Use InterviewReserveTime;
+
 
 class Interview_UserList_ReserveTime extends Model
 {
-    public function reserve_setting(Request $request)
+    public function reserve_setting(Request $request)//面接の予約
     {
       $interview = new Interview();
       $interview->corp_id = \Auth::user()->corp_id;
@@ -41,5 +39,19 @@ class Interview_UserList_ReserveTime extends Model
       }
 
       return true;
+    }
+    public function interviews($corp_id,$user_id,$stage_flg)
+    {
+      $data =[];
+      $interviews = DB::table('interviews')
+                  ->join('user_lists','interviews.id', '=', 'user_lists.interview_id')
+                  ->select('interviews.*')->where('interviews.corp_id','=', $corp_id)->where('user_lists.user_id', '=', $user_id)->where('interviews.stage_flg', '=', $stage_flg)->get();
+
+      $interviews = Interview::where('corp_id', $corp_id)->where('stage_flg',1)->get();
+      foreach($interviews as $interview)
+      {
+        $interviewee = Interviewee::where('id', $interview->interviewee_id)->first();
+      }
+
     }
 }

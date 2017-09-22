@@ -15,6 +15,7 @@ class InterviewsController extends Controller
     //
     public function index()
     {
+
         return view('interviews.index');
     }
 
